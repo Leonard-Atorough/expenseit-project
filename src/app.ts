@@ -2,29 +2,48 @@ import { initAside } from "./ui/layout/aside";
 import { initHeader } from "./ui/layout/header";
 import { initMain } from "./ui/layout/main";
 import { initDashboard } from "./ui/views/dashboard";
+import { InitAppLayout } from "./ui/layout/appLayout";
+import { CreateRouter } from "./router/Router";
+import { createDashboardController } from "./controllers/dashboardController";
+import { AppStore } from "./store/appStore";
 
-async function initApp(container: HTMLElement) {
-  initHeader(container);
-  initAside(container);
-  const { element: dashboard, cleanup } = await initDashboard();
-  initMain(container, dashboard);
-  //   return cleanup;
-}
+// async function initApp(container: HTMLElement) {
+//   initHeader(container);
+//   initAside(container);
+//   const { element: dashboard, cleanup } = await initDashboard();
+//   initMain(container, dashboard);
+//   //   return cleanup;
+// }
 
-const run = async () => {
-  document.addEventListener("DOMContentLoaded", async () => {
-    const appRoot = document.getElementById("app");
-    if (!appRoot) {
-      console.error("Missing app root element: #app");
-      throw new Error("Missing #app container");
-    }
+// const run = async () => {
+//   document.addEventListener("DOMContentLoaded", async () => {
+//     const appRoot = document.getElementById("app");
+//     if (!appRoot) {
+//       console.error("Missing app root element: #app");
+//       throw new Error("Missing #app container");
+//     }
 
-    const cleanup = await initApp(appRoot);
+//     const cleanup = await initApp(appRoot);
 
-    // Optionally handle cleanup on unload
-    window.addEventListener("beforeunload", () => {
-      //   cleanup();
-    });
-  });
-};
-run();
+//     // Optionally handle cleanup on unload
+//     window.addEventListener("beforeunload", () => {
+//       //   cleanup();
+//     });
+//   });
+// };
+// run();
+
+const router = CreateRouter();
+const contentRoot = InitAppLayout();
+const store = AppStore;
+
+router.register("/", async () => {
+  const controller = await createDashboardController(
+    await store,
+    router,
+    contentRoot
+  );
+  controller.init();
+});
+
+router.navigate(window.location.pathname || "/");

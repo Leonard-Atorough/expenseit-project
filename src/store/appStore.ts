@@ -1,9 +1,11 @@
-import { loadExpenseAsync } from "../services/storage";
+import { loadExpenseAsync } from "../services/storageService";
 import { createBatchExpenseSaver } from "./batch";
 
 import type { AppState } from "./types";
 
-export async function createStore(InitialPartial: Partial<AppState> = {}) {
+export async function createStore(
+  InitialPartial: Partial<AppState> = {}
+): Promise<AppStore> {
   let state: AppState = {
     expenses: await loadExpenseAsync(),
     isLoading: false,
@@ -33,7 +35,7 @@ export async function createStore(InitialPartial: Partial<AppState> = {}) {
     return () => subscribers.delete(fn);
   };
 
-  const emit = () => {
+  const emit = (): void => {
     const snapshot = getState();
 
     for (const listener of subscribers) {
@@ -44,7 +46,7 @@ export async function createStore(InitialPartial: Partial<AppState> = {}) {
       }
     }
   };
-  const dispose = () => {
+  const dispose = (): void => {
     saver.flush();
     saver.dispose();
     subscribers.clear();
@@ -53,4 +55,11 @@ export async function createStore(InitialPartial: Partial<AppState> = {}) {
   return { getState, setState, subscribe, dispose };
 }
 
-export const appStore = createStore();
+export const AppStore = createStore();
+
+export interface AppStore {
+  getState(): AppState;
+  setState(updater: (prev: AppState) => AppState): void;
+  subscribe(fn: (state: AppState) => void): () => void;
+  dispose(): void;
+}

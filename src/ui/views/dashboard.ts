@@ -1,10 +1,22 @@
+import type { DashboardController } from "../../controllers/dashboardController";
 import type { Expense } from "../../models/expense";
-import { appStore } from "../../store/store";
-import { mountAddExpenseForm } from "../components/expenseForm/expenseForm";
-import { createExpenseRow, createExpenseRow2 } from "../components/expenseTable/expenseRow";
-import { mountExpenseTable } from "../components/expenseTable/expenseTable";
+import { AppStore } from "../../store/appStore";
+import {
+  mountAddExpenseForm,
+  mountAddExpenseForm2,
+} from "../components/expenseForm/expenseForm";
+import {
+  createExpenseRow,
+  createExpenseRow2,
+} from "../components/expenseTable/expenseRow";
+import {
+  mountExpenseTable,
+  mountExpenseTable2,
+} from "../components/expenseTable/expenseTable";
 
 import styles from "./dashboard.module.css";
+
+const formId = "addExpenseForm";
 
 export async function initDashboard(): Promise<{
   element: HTMLDivElement;
@@ -12,7 +24,7 @@ export async function initDashboard(): Promise<{
 }> {
   const { addExpenseForm, table } = BuildUI();
 
-  const unsubscribe = (await appStore).subscribe((state) => {
+  const unsubscribe = (await AppStore).subscribe((state) => {
     const tableBody = table.tBodies[0];
     tableBody.innerHTML = "";
     state.expenses.forEach((expense: Expense, idx: number) =>
@@ -28,18 +40,38 @@ export async function initDashboard(): Promise<{
     element: dashboard,
     cleanup: async () => {
       unsubscribe();
-      (await appStore).dispose();
+      (await AppStore).dispose();
     },
   };
 }
 
 function BuildUI() {
   const addExpenseForm = document.createElement("div");
-  addExpenseForm.id = "addExpenseForm";
+  addExpenseForm.id = formId;
   addExpenseForm.className = styles["expense-form-container"];
   mountAddExpenseForm(addExpenseForm);
 
   const table = mountExpenseTable();
 
   return { addExpenseForm, table };
+}
+
+export default async function initDashboard2(
+  root: HTMLDivElement,
+  state: AppStore,
+  controller: DashboardController
+) {
+  async function render() {
+    const expenses = state.getState().expenses;
+
+    root.innerHTML = `
+      <div class="dashboard-view">
+        <div id="${formId}" class=${styles["expense-form-container"]}>
+          ${mountAddExpenseForm2()}
+        </div>
+        ${mountExpenseTable2(expenses).outerHTML}
+      </div>
+    `;
+  }
+  return { render };
 }

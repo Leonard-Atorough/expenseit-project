@@ -1,5 +1,5 @@
 import type { Expense } from "../models/expense";
-import { saveExpensesAsync } from "../services/storage";
+import { saveExpensesAsync } from "../services/storageService";
 
 export function createBatchExpenseSaver(opts?: {
   delayMs?: number;

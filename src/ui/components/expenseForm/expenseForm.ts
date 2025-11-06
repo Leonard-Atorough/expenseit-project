@@ -1,5 +1,5 @@
 import { createExpenseModel, type Expense } from "../../../models/expense";
-import { appStore } from "../../../store/store";
+import { AppStore } from "../../../store/appStore";
 
 import styles from "./expenseForm.module.css";
 
@@ -7,12 +7,18 @@ export const mountAddExpenseForm = (container: HTMLElement): Promise<void> => {
   const formTitle = document.createElement("h2");
   formTitle.textContent = "Add Expense";
   const form = createForm();
-  form.classList.add(`${styles["add-form"]}`);
 
   container.append(formTitle, form);
 
   attachEditHandler(form);
   return attachFormHandler(form);
+};
+
+export const mountAddExpenseForm2 = (): string => {
+  return `
+    <h2> Add Expense </h2>
+    ${createForm().outerHTML}
+  `;
 };
 
 function attachFormHandler(form: HTMLFormElement): Promise<void> {
@@ -24,7 +30,7 @@ function attachFormHandler(form: HTMLFormElement): Promise<void> {
       const fd = new FormData(form);
       const newExpense: Expense = createExpenseModel(id, fd);
 
-      const existingExpenseIndex = (await appStore)
+      const existingExpenseIndex = (await AppStore)
         .getState()
         .expenses.findIndex((x) => x.id === newExpense.id);
       if (existingExpenseIndex !== -1) {
@@ -37,7 +43,9 @@ function attachFormHandler(form: HTMLFormElement): Promise<void> {
       form.reset();
       form.id = "";
 
-      const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      const button = form.querySelector(
+        'button[type="submit"]'
+      ) as HTMLButtonElement;
       button.textContent = "Add";
       button.classList.remove(styles["-edit"]);
 
@@ -47,14 +55,14 @@ function attachFormHandler(form: HTMLFormElement): Promise<void> {
 }
 
 async function addExpense(newExpense: Expense) {
-  (await appStore).setState((prev) => ({
+  (await AppStore).setState((prev) => ({
     ...prev,
     expenses: [...prev.expenses, newExpense],
   }));
 }
 
 async function editExpense(existingExpenseIndex: number, newExpense: Expense) {
-  (await appStore).setState((prev) => {
+  (await AppStore).setState((prev) => {
     const updatedExpenses = [...prev.expenses];
     updatedExpenses[existingExpenseIndex] = newExpense;
     return {
@@ -70,10 +78,10 @@ function attachEditHandler(form: HTMLFormElement): void {
   document.addEventListener("edit-expense", async (e: Event) => {
     const CustomEvent = e as CustomEvent;
 
-    const stateInstance = (await appStore).getState();
+    const stateInstance = (await AppStore).getState();
     stateInstance.mode = "edit";
     stateInstance.selectedExpenseId = CustomEvent.detail as string;
-    const expense = (await appStore)
+    const expense = (await AppStore)
       .getState()
       .expenses.find((x) => x.id === stateInstance.selectedExpenseId);
 
@@ -82,13 +90,17 @@ function attachEditHandler(form: HTMLFormElement): void {
     form.reset();
 
     form.id = expense.id;
-    (form.elements.namedItem("desc") as HTMLInputElement).value = expense.description;
+    (form.elements.namedItem("desc") as HTMLInputElement).value =
+      expense.description;
     (form.elements.namedItem("amount") as HTMLInputElement).value = (
       expense.amountCents / 100
     ).toFixed(2);
     (form.elements.namedItem("date") as HTMLInputElement).value = expense.date;
-    (form.elements.namedItem("category") as HTMLSelectElement).value = expense.category ?? "";
-    const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    (form.elements.namedItem("category") as HTMLSelectElement).value =
+      expense.category ?? "";
+    const button = form.querySelector(
+      'button[type="submit"]'
+    ) as HTMLButtonElement;
     button.textContent = "Edit";
     button.classList.add(styles["-edit"]);
   });
@@ -96,6 +108,7 @@ function attachEditHandler(form: HTMLFormElement): void {
 
 function createForm(): HTMLFormElement {
   const form = document.createElement("form");
+  form.classList.add(`${styles["add-form"]}`);
 
   const descInput = createInput({
     name: "desc",

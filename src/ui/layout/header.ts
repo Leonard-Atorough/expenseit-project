@@ -15,3 +15,11 @@ export function initHeader(root: HTMLElement) {
 
   render();
 }
+
+export function Header() {
+  return `
+    <header class="header-banner">
+      <h1 class="title">Expense Dashboard</h1>
+    </header>
+  `;
+}

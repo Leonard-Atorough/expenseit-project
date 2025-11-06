@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createStore } from "./store";
+import { createStore } from "./appStore";
 import type { AppState } from "./types";
 
 let store: ReturnType<typeof createStore>;
@@ -15,6 +15,7 @@ function SetUpStore(): ReturnType<typeof createStore> {
       },
     ],
     isLoading: false,
+    mode: "create",
   };
   return createStore(testState);
 }

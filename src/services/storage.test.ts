@@ -5,7 +5,7 @@ import {
   loadExpenseAsync,
   loadExpenses,
   saveExpenses,
-} from "./storage";
+} from "./storageService";
 import { createInMemoryLocalStorage } from "../__mocks__/createInMemoryLocalStorage";
 
 const key = "expenses";

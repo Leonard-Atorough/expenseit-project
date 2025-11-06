@@ -11,4 +11,12 @@ const render = (root: HTMLElement): HTMLElement => {
   return main;
 };
 
-// view: HTMLElement;
+// export interface MainProps {
+//   view: HTMLElement;
+// }
+
+export function Main() {
+  return `
+    <main class="main-content"></main>
+  `;
+}

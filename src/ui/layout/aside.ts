@@ -7,3 +7,10 @@ const render = (root: HTMLElement) => {
   aside.id = "main-sidebar";
   root.appendChild(aside);
 };
+
+export function Aside() {
+  return `
+    <aside class="main-sidebar">
+    </aside>
+    `;
+}

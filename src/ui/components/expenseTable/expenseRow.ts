@@ -1,5 +1,5 @@
 import type { Expense } from "../../../models/expense";
-import { appStore } from "../../../store/store";
+import { AppStore } from "../../../store/appStore";
 
 import styles from "./expenseRow.module.css";
 
@@ -90,7 +90,7 @@ const attachClickHandlers = (row: HTMLTableRowElement) => {
   row.addEventListener("click", async (e) => {
     e.preventDefault();
     if ((e.target as HTMLElement).closest("#delete")) {
-      (await appStore).setState((prev) => ({
+      (await AppStore).setState((prev) => ({
         ...prev,
         expenses: prev.expenses.filter((x) => x.id !== row.id),
       }));
