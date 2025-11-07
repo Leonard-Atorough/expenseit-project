@@ -24,12 +24,12 @@
   resize: horizontal;
   overflow: auto;
   margin: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0;
   border-radius: 0.5rem;
 }
 
 .main-nav {
-  padding: 0.5rem 0;
+  padding: 0.5rem;
 }
 
 .main-nav-list {
@@ -43,8 +43,7 @@
     text-align: left;
     border-radius: 0.375rem;
     &:hover,
-    &:focus,
-    &::selection {
+    &:focus {
       background-color: var(--primary-200);
     }
   }

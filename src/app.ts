@@ -51,8 +51,13 @@ router.register("/dashboard", async () => {
   controller.init();
 });
 
-router.register("/transactions", () => {
-  contentRoot.innerHTML = "<h2>Transactions page – coming soon</h2>";
+router.register("/transactions", async () => {
+  const controller = await createDashboardController(
+    await store,
+    router,
+    contentRoot
+  );
+  controller.init();
 });
 
 router.register("/account", () => {
