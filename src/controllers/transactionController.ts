@@ -1,18 +1,18 @@
-import initDashboard2 from "../ui/views/dashboard";
+import initTransactions from "../ui/views/transactions";
 import type { Router } from "../router/Router";
 import type { AppStore } from "../store/appStore";
 import type { Expense } from "../models/expense";
 
-export async function createDashboardController(
+export async function createTransactionController(
   store: AppStore,
   router: Router,
   container: HTMLDivElement
-): Promise<DashboardController> {
-  const placeholder: Partial<DashboardController> = {};
-  const dashboard = await initDashboard2(
+): Promise<TransactionController> {
+  const placeholder: Partial<TransactionController> = {};
+  const transactions = await initTransactions(
     container,
     store,
-    placeholder as DashboardController
+    placeholder as TransactionController
   );
 
   async function addTransaction(raw: Omit<Expense, "id">) {
@@ -27,11 +27,11 @@ export async function createDashboardController(
   }
 
   function init() {
-    store.subscribe(() => dashboard.render());
-    dashboard.render();
+    store.subscribe(() => transactions.render());
+    transactions.render();
   }
 
-  const controller: DashboardController = {
+  const controller: TransactionController = {
     init,
     addTransaction,
   };
@@ -41,7 +41,7 @@ export async function createDashboardController(
   return controller;
 }
 
-export interface DashboardController {
+export interface TransactionController {
   init(): void;
   addTransaction(raw: Omit<Expense, "id">): Promise<void>;
 }

@@ -1,16 +1,16 @@
-import type { DashboardController } from "../../controllers/dashboardController";
+import type { TransactionController } from "../../controllers/transactionController";
 import { AppStore } from "../../store/appStore";
 import { mountAddExpenseForm } from "../components/expenseForm/expenseForm";
 import { mountExpenseTable } from "../components/expenseTable/expenseTable";
 
-import styles from "./dashboard.module.css";
+import styles from "./transactions.module.css";
 
 const formId = "addExpenseForm";
 
-export default async function initDashboard2(
+export default async function initDashboard(
   root: HTMLDivElement,
   state: AppStore,
-  controller: DashboardController
+  controller: TransactionController
 ) {
   async function render() {
     const { expenses, mode } = state.getState();
@@ -18,7 +18,7 @@ export default async function initDashboard2(
     root.innerHTML = "";
 
     const dashboard = document.createElement("div");
-    dashboard.classList.add(styles["dashboard-view"]);
+    dashboard.classList.add(styles["transactions-view"]);
 
     const formContainer = document.createElement("div");
     formContainer.id = formId;
