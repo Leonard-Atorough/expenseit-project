@@ -1,16 +1,22 @@
-export function initAside(root: HTMLElement) {
-  render(root);
-}
-const render = (root: HTMLElement) => {
-  const aside = document.createElement("aside");
-  aside.classList.add("main-sidebar");
-  aside.id = "main-sidebar";
-  root.appendChild(aside);
-};
-
 export function Aside() {
   return `
     <aside class="main-sidebar">
+      <nav class="main-nav" id="mainNavbar" aria-label="Main Menu">
+        <ul class="main-nav-list">
+          <li class="tab"> 
+            <a href="/"> Dashboard </a>
+          </li> 
+          <li class="tab"> 
+            <a href="/transactions"> Transactions </a>
+          </li> 
+          <li class="tab"> 
+            <a href="/account"> Account </a>
+          </li> 
+          <li class="tab"> 
+            <a href="/settings"> Settings </a>
+          </li> 
+        </ul>
+      </nav>
     </aside>
     `;
 }

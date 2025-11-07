@@ -2,9 +2,16 @@ import { Header } from "./header";
 import { Aside } from "./aside";
 import { Main } from "./main";
 
+import type { Router } from "../../router/Router";
+
 let viewRoot: HTMLDivElement;
 
-export function InitAppLayout(rootId: string = "app"): HTMLDivElement {
+const NAV_ID = "mainNavbar";
+
+export function InitAppLayout(
+  router: Router,
+  rootId: string = "app"
+): HTMLDivElement {
   const appRoot = document.getElementById(rootId);
 
   if (!appRoot) {
@@ -22,13 +29,27 @@ export function InitAppLayout(rootId: string = "app"): HTMLDivElement {
 
   viewRoot = document.querySelector(".main-content") as HTMLDivElement;
   console.log(viewRoot);
+
+  const nav = document.getElementById(NAV_ID);
+
+  nav?.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const link = (e.target as Element).closest("a[href]");
+
+    const route = link?.getAttribute("href") ?? "/";
+    console.log(route);
+    
+    router.navigate(route);
+  });
+
   return viewRoot;
 }
 
-export function mount(content: Node) {
-  while (viewRoot.firstChild) {
-    viewRoot.removeChild(viewRoot.firstChild);
-  }
+// export function mount(content: Node) {
+//   while (viewRoot.firstChild) {
+//     viewRoot.removeChild(viewRoot.firstChild);
+//   }
 
-  viewRoot.appendChild(content);
-}
+//   viewRoot.appendChild(content);
+// }

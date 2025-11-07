@@ -3,22 +3,36 @@ import { AppStore } from "../../../store/appStore";
 
 import styles from "./expenseForm.module.css";
 
-export const mountAddExpenseForm = (container: HTMLElement): Promise<void> => {
-  const formTitle = document.createElement("h2");
-  formTitle.textContent = "Add Expense";
+export interface ExpenseFormProps {
+  onSubmit: (handler: Omit<Expense, "id">) => Promise<void>;
+  isEditing: string;
+}
+
+export const mountAddExpenseForm = (
+  props: ExpenseFormProps
+): HTMLFormElement => {
+  const { onSubmit, isEditing } = props;
   const form = createForm();
 
-  container.append(formTitle, form);
+  // attachEditHandler(form);
+  // attachFormHandler(form);
 
-  attachEditHandler(form);
-  return attachFormHandler(form);
-};
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
 
-export const mountAddExpenseForm2 = (): string => {
-  return `
-    <h2> Add Expense </h2>
-    ${createForm().outerHTML}
-  `;
+    const payload: Omit<Expense, "id"> = {
+      description: fd.get("desc") as string,
+      amountCents: Math.round(parseFloat(fd.get("amount") as string) * 100),
+      date: fd.get("date") as string,
+      category: fd.get("category") as string,
+    };
+
+    await onSubmit(payload);
+    form.reset();
+  });
+
+  return form;
 };
 
 function attachFormHandler(form: HTMLFormElement): Promise<void> {

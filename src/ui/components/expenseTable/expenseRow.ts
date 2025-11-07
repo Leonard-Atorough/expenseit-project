@@ -5,31 +5,6 @@ import styles from "./expenseRow.module.css";
 
 export const createExpenseRow = (
   expense: Expense,
-  isAlternative?: boolean
-): HTMLTableRowElement => {
-  const tableRow = document.createElement("tr");
-  tableRow.id = expense.id;
-  tableRow.classList.add(styles["expense-table-row"]);
-  if (isAlternative) tableRow.classList.add(`${styles["-alternate"]}`);
-
-  const fragement = new DocumentFragment();
-
-  const desc = createTableCell({ content: expense.description });
-  const amnt = createTableCell({ content: (expense.amountCents / 100).toFixed(2).toString() });
-  const date = createTableCell({ content: expense.date });
-  const category = createTableCell({ content: expense.category ?? "(Empty)" });
-  const actions = createTableActionsRow();
-
-  fragement.append(desc, amnt, date, category, actions);
-  tableRow.appendChild(fragement);
-
-  attachClickHandlers(tableRow);
-
-  return tableRow;
-};
-
-export const createExpenseRow2 = (
-  expense: Expense,
   isAlternative: boolean
 ): HTMLTableRowElement => {
   const tableRow = document.createElement("tr");
@@ -38,7 +13,9 @@ export const createExpenseRow2 = (
   if (isAlternative) tableRow.classList.add(`${styles["-alternate"]}`);
   tableRow.innerHTML = `
     <td class=${styles.cell}>${expense.description}</td>
-    <td class=${styles.cell}>${(expense.amountCents / 100).toFixed(2).toString()}</td>
+    <td class=${styles.cell}>${(expense.amountCents / 100)
+    .toFixed(2)
+    .toString()}</td>
     <td class=${styles.cell}>${expense.date}</td>
     <td class=${styles.cell}>${expense.category ?? "(Empty)"}</td>
     <td class=${styles.cell}>
@@ -51,7 +28,9 @@ export const createExpenseRow2 = (
   return tableRow;
 };
 
-const createTableCell = (options: { content: string }): HTMLTableCellElement => {
+const createTableCell = (options: {
+  content: string;
+}): HTMLTableCellElement => {
   const cell = document.createElement("td");
   cell.textContent = options.content;
   cell.classList.add(styles.cell);
@@ -95,7 +74,9 @@ const attachClickHandlers = (row: HTMLTableRowElement) => {
         expenses: prev.expenses.filter((x) => x.id !== row.id),
       }));
     } else if ((e.target as HTMLElement).closest("#edit")) {
-      document.dispatchEvent(new CustomEvent("edit-expense", { detail: row.id }));
+      document.dispatchEvent(
+        new CustomEvent("edit-expense", { detail: row.id })
+      );
     }
   });
 };
