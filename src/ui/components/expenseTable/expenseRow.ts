@@ -3,10 +3,15 @@ import { AppStore } from "../../../store/appStore";
 
 import styles from "./expenseRow.module.css";
 
+type expenseRowHandlerProps = {
+  setIsEditing: (expenseId: string) => Promise<void>;
+  handleDelete: (expenseId: string) => Promise<void>;
+};
+
 export const createExpenseRow = (
   expense: Expense,
   isAlternative: boolean,
-  setIsEditing: (expenseId: string) => Promise<void>
+  handlers: expenseRowHandlerProps
 ): HTMLTableRowElement => {
   const tableRow = document.createElement("tr");
   tableRow.id = expense.id;
@@ -24,7 +29,10 @@ export const createExpenseRow = (
 
   tableRow.appendChild(createTableActionsRow());
 
-  attachClickHandlers(tableRow, expense.id, setIsEditing);
+  attachClickHandlers(tableRow, expense.id, {
+    setIsEditing: handlers.setIsEditing,
+    handleDelete: handlers.handleDelete,
+  });
 
   return tableRow;
 };
@@ -58,17 +66,14 @@ const addButton = (
 const attachClickHandlers = (
   row: HTMLTableRowElement,
   expenseId: string,
-  setIsEditing: (expenseId: string) => Promise<void>
+  handlers: expenseRowHandlerProps
 ) => {
   row.addEventListener("click", async (e) => {
     e.preventDefault();
     if ((e.target as HTMLElement).closest("#delete")) {
-      (await AppStore).setState((prev) => ({
-        ...prev,
-        expenses: prev.expenses.filter((x) => x.id !== row.id),
-      }));
+      handlers.handleDelete(expenseId);
     } else if ((e.target as HTMLElement).closest("#edit")) {
-      setIsEditing(expenseId);
+      handlers.setIsEditing(expenseId);
     }
   });
 };

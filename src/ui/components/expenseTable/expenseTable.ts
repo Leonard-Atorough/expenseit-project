@@ -4,7 +4,8 @@ import styles from "./expenseTable.module.css";
 
 export const mountExpenseTable = (
   expenses: Expense[],
-  setIsEditing: (expenseId: string) => Promise<void>
+  setIsEditing: (expenseId: string) => Promise<void>,
+  handleDelete: (expenseId: string) => Promise<void>
 ): HTMLTableElement => {
   const table = document.createElement("table");
   table.classList.add(styles["expense-table"]);
@@ -20,20 +21,21 @@ export const mountExpenseTable = (
       </tr> 
     </thead>
   `;
-  table.appendChild(mountTableBody(expenses, setIsEditing));
+  table.appendChild(mountTableBody(expenses, setIsEditing, handleDelete));
 
   return table;
 };
 
 const mountTableBody = (
   expenses: Expense[],
-  setIsEditing: (expenseId: string) => Promise<void>
+  setIsEditing: (expenseId: string) => Promise<void>,
+  handleDelete: (expenseId: string) => Promise<void>
 ): HTMLTableSectionElement => {
   const tableBody = document.createElement("tbody");
   tableBody.classList.add("expense-table-body");
 
   const expenseRows = expenses.map((expense, idx) =>
-    createExpenseRow(expense, idx % 2 !== 0, setIsEditing)
+    createExpenseRow(expense, idx % 2 !== 0, {setIsEditing, handleDelete})
   );
 
   tableBody.append(...expenseRows);

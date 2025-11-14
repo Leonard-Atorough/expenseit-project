@@ -41,6 +41,13 @@ export async function createTransactionController(
     }));
   }
 
+  async function deleteTransaction(expenseId: string) {
+    (await store).setState((prev) => ({
+      ...prev,
+      expenses: prev.expenses.filter((x) => x.id !== expenseId),
+    }));
+  }
+
   async function setIsEditing(expense: string) {
     (await store).setState((prev) => ({
       ...prev,
@@ -59,6 +66,7 @@ export async function createTransactionController(
     addTransaction,
     editTransaction,
     setIsEditing,
+    deleteTransaction
   };
 
   Object.assign(placeholder, controller);
@@ -71,4 +79,5 @@ export interface TransactionController {
   addTransaction(raw: Omit<Expense, "id">): Promise<void>;
   editTransaction(params: Expense): Promise<void>;
   setIsEditing(expenseId: string): Promise<void>;
+  deleteTransaction(expenseId: string): Promise<void>
 }
