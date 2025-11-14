@@ -16,14 +16,21 @@ export const mountExpenseTable = (expenses: Expense[]): HTMLTableElement => {
           .join("")}
       </tr> 
     </thead>
-    <tbody class=${["expense-table-body"]}>
-      ${expenses
-        .map(
-          (expense, idx) => createExpenseRow(expense, idx % 2 !== 0).outerHTML
-        )
-        .join("")}
-    </tbody>
   `;
+  table.appendChild(mountTableBody(expenses));
 
   return table;
+};
+
+const mountTableBody = (expenses: Expense[]): HTMLTableSectionElement => {
+  const tableBody = document.createElement("tbody");
+  tableBody.classList.add("expense-table-body");
+
+  const expenseRows = expenses.map((expense, idx) =>
+    createExpenseRow(expense, idx % 2 !== 0)
+  );
+
+  tableBody.append(...expenseRows);
+
+  return tableBody;
 };

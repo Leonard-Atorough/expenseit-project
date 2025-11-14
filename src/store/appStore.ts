@@ -9,7 +9,7 @@ export async function createStore(
   let state: AppState = {
     expenses: await loadExpenseAsync(),
     isLoading: false,
-    mode: "create",
+    formMode: "create",
     selectedExpenseId: null,
     ...InitialPartial,
   };

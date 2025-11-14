@@ -9,12 +9,12 @@ import type { Expense } from "../models/expense";
 //   selectedCountry?: string;
 // }
 
-type CreateMode = "create" | "edit";
+type FormMode = "create" | "edit";
 
 export interface AppState {
   expenses: Expense[];
   isLoading: boolean;
-  mode: CreateMode;
+  formMode: FormMode;
   selectedExpenseId?: string | null;
   selectedCountry?: string;
 }

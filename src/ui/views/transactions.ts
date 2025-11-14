@@ -13,7 +13,7 @@ export default async function initDashboard(
   controller: TransactionController
 ) {
   async function render() {
-    const { expenses, mode } = state.getState();
+    const { expenses, formMode, selectedExpenseId } = state.getState();
 
     root.innerHTML = "";
 
@@ -27,7 +27,9 @@ export default async function initDashboard(
     formContainer.appendChild(
       mountAddExpenseForm({
         onSubmit: controller.addTransaction,
-        isEditing: mode,
+        onEdit: controller.editTransaction,
+        mode: formMode,
+        selectedExpense: selectedExpenseId!,
       })
     );
 

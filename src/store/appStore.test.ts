@@ -15,7 +15,7 @@ function SetUpStore(): ReturnType<typeof createStore> {
       },
     ],
     isLoading: false,
-    mode: "create",
+    formMode: "create",
   };
   return createStore(testState);
 }

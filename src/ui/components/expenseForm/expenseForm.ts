@@ -5,17 +5,20 @@ import styles from "./expenseForm.module.css";
 
 export interface ExpenseFormProps {
   onSubmit: (handler: Omit<Expense, "id">) => Promise<void>;
-  isEditing: string;
+  onEdit: (handler: Expense) => Promise<void>;
+  mode: string;
+  selectedExpense: string;
 }
 
 export const mountAddExpenseForm = (
   props: ExpenseFormProps
 ): HTMLFormElement => {
-  const { onSubmit, isEditing } = props;
+  const { onSubmit, onEdit, mode, selectedExpense } = props;
   const form = createForm();
 
-  // attachEditHandler(form);
-  // attachFormHandler(form);
+  if (mode === "edit") {
+    handleEditMode(form, selectedExpense);
+  }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -27,97 +30,55 @@ export const mountAddExpenseForm = (
       date: fd.get("date") as string,
       category: fd.get("category") as string,
     };
-
-    await onSubmit(payload);
-    form.reset();
+    if (mode) {
+      await onEdit({ ...payload, id: selectedExpense });
+      resetForm(form);
+    } else {
+      await onSubmit(payload);
+      resetForm(form);
+    }
   });
 
   return form;
 };
 
-function attachFormHandler(form: HTMLFormElement): Promise<void> {
-  return new Promise<void>((resolve) => {
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+function resetForm(form: HTMLFormElement) {
+  form.reset();
+  form.id = "";
 
-      const id = form.id.length > 0 ? form.id : crypto.randomUUID();
-      const fd = new FormData(form);
-      const newExpense: Expense = createExpenseModel(id, fd);
-
-      const existingExpenseIndex = (await AppStore)
-        .getState()
-        .expenses.findIndex((x) => x.id === newExpense.id);
-      if (existingExpenseIndex !== -1) {
-        // Edit existing expense
-        await editExpense(existingExpenseIndex, newExpense);
-      } else {
-        // Add new expense
-        await addExpense(newExpense);
-      }
-      form.reset();
-      form.id = "";
-
-      const button = form.querySelector(
-        'button[type="submit"]'
-      ) as HTMLButtonElement;
-      button.textContent = "Add";
-      button.classList.remove(styles["-edit"]);
-
-      if (button) resolve();
-    });
-  });
+  const button = form.querySelector(
+    'button[type="submit"]'
+  ) as HTMLButtonElement;
+  button.textContent = "Add";
+  button.classList.remove(styles["-edit"]);
 }
 
-async function addExpense(newExpense: Expense) {
-  (await AppStore).setState((prev) => ({
-    ...prev,
-    expenses: [...prev.expenses, newExpense],
-  }));
-}
+async function handleEditMode(
+  form: HTMLFormElement,
+  selectedExpenseId: string
+): Promise<void> {
+  const expense = (await AppStore)
+    .getState()
+    .expenses.filter((expense) => expense.id === selectedExpenseId)[0];
 
-async function editExpense(existingExpenseIndex: number, newExpense: Expense) {
-  (await AppStore).setState((prev) => {
-    const updatedExpenses = [...prev.expenses];
-    updatedExpenses[existingExpenseIndex] = newExpense;
-    return {
-      ...prev,
-      expenses: updatedExpenses,
-      selectedExpenseId: null,
-      mode: "create",
-    };
-  });
-}
+  if (!expense) return;
 
-function attachEditHandler(form: HTMLFormElement): void {
-  document.addEventListener("edit-expense", async (e: Event) => {
-    const CustomEvent = e as CustomEvent;
+  form.reset();
 
-    const stateInstance = (await AppStore).getState();
-    stateInstance.mode = "edit";
-    stateInstance.selectedExpenseId = CustomEvent.detail as string;
-    const expense = (await AppStore)
-      .getState()
-      .expenses.find((x) => x.id === stateInstance.selectedExpenseId);
-
-    if (!expense) return;
-
-    form.reset();
-
-    form.id = expense.id;
-    (form.elements.namedItem("desc") as HTMLInputElement).value =
-      expense.description;
-    (form.elements.namedItem("amount") as HTMLInputElement).value = (
-      expense.amountCents / 100
-    ).toFixed(2);
-    (form.elements.namedItem("date") as HTMLInputElement).value = expense.date;
-    (form.elements.namedItem("category") as HTMLSelectElement).value =
-      expense.category ?? "";
-    const button = form.querySelector(
-      'button[type="submit"]'
-    ) as HTMLButtonElement;
-    button.textContent = "Edit";
-    button.classList.add(styles["-edit"]);
-  });
+  form.id = expense.id;
+  (form.elements.namedItem("desc") as HTMLInputElement).value =
+    expense.description;
+  (form.elements.namedItem("amount") as HTMLInputElement).value = (
+    expense.amountCents / 100
+  ).toFixed(2);
+  (form.elements.namedItem("date") as HTMLInputElement).value = expense.date;
+  (form.elements.namedItem("category") as HTMLSelectElement).value =
+    expense.category ?? "";
+  const button = form.querySelector(
+    'button[type="submit"]'
+  ) as HTMLButtonElement;
+  button.textContent = "Edit";
+  button.classList.add(styles["-edit"]);
 }
 
 function createForm(): HTMLFormElement {

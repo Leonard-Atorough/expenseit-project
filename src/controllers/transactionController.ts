@@ -26,6 +26,20 @@ export async function createTransactionController(
     }));
   }
 
+  async function editTransaction(params: Expense) {
+    const state = (await store).getState();
+
+    const oldExpenses = state.expenses.filter(
+      (expense) => expense.id !== params.id
+    );
+
+    (await store).setState((prev) => ({
+      ...prev,
+      expenses: [...oldExpenses, params],
+      formMode: "create",
+    }));
+  }
+
   function init() {
     store.subscribe(() => transactions.render());
     transactions.render();
@@ -34,6 +48,7 @@ export async function createTransactionController(
   const controller: TransactionController = {
     init,
     addTransaction,
+    editTransaction,
   };
 
   Object.assign(placeholder, controller);
@@ -44,4 +59,5 @@ export async function createTransactionController(
 export interface TransactionController {
   init(): void;
   addTransaction(raw: Omit<Expense, "id">): Promise<void>;
+  editTransaction(params: Expense): Promise<void>;
 }
