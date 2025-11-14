@@ -5,7 +5,8 @@ import styles from "./expenseRow.module.css";
 
 export const createExpenseRow = (
   expense: Expense,
-  isAlternative: boolean
+  isAlternative: boolean,
+  setIsEditing: (expenseId: string) => Promise<void>
 ): HTMLTableRowElement => {
   const tableRow = document.createElement("tr");
   tableRow.id = expense.id;
@@ -23,7 +24,7 @@ export const createExpenseRow = (
 
   tableRow.appendChild(createTableActionsRow());
 
-  attachClickHandlers(tableRow, expense.id);
+  attachClickHandlers(tableRow, expense.id, setIsEditing);
 
   return tableRow;
 };
@@ -54,7 +55,11 @@ const addButton = (
   parent.appendChild(button);
 };
 
-const attachClickHandlers = (row: HTMLTableRowElement, expenseId: string) => {
+const attachClickHandlers = (
+  row: HTMLTableRowElement,
+  expenseId: string,
+  setIsEditing: (expenseId: string) => Promise<void>
+) => {
   row.addEventListener("click", async (e) => {
     e.preventDefault();
     if ((e.target as HTMLElement).closest("#delete")) {
@@ -63,11 +68,7 @@ const attachClickHandlers = (row: HTMLTableRowElement, expenseId: string) => {
         expenses: prev.expenses.filter((x) => x.id !== row.id),
       }));
     } else if ((e.target as HTMLElement).closest("#edit")) {
-      (await AppStore).setState((prev) => ({
-        ...prev,
-        formMode: "edit",
-        selectedExpenseId: expenseId
-      }));
+      setIsEditing(expenseId);
     }
   });
 };

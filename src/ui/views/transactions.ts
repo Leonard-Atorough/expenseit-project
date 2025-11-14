@@ -33,7 +33,7 @@ export default async function initDashboard(
       })
     );
 
-    const table = mountExpenseTable(expenses);
+    const table = mountExpenseTable(expenses, controller.setIsEditing);
 
     dashboard.append(formContainer, table);
     root.appendChild(dashboard);

@@ -37,6 +37,15 @@ export async function createTransactionController(
       ...prev,
       expenses: [...oldExpenses, params],
       formMode: "create",
+      selectedExpenseId: null,
+    }));
+  }
+
+  async function setIsEditing(expense: string) {
+    (await store).setState((prev) => ({
+      ...prev,
+      formMode: "edit",
+      selectedExpenseId: expense,
     }));
   }
 
@@ -49,6 +58,7 @@ export async function createTransactionController(
     init,
     addTransaction,
     editTransaction,
+    setIsEditing,
   };
 
   Object.assign(placeholder, controller);
@@ -60,4 +70,5 @@ export interface TransactionController {
   init(): void;
   addTransaction(raw: Omit<Expense, "id">): Promise<void>;
   editTransaction(params: Expense): Promise<void>;
+  setIsEditing(expenseId: string): Promise<void>;
 }

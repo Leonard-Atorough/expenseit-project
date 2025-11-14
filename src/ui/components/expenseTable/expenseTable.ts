@@ -2,7 +2,10 @@ import type { Expense } from "../../../models/expense";
 import { createExpenseRow } from "./expenseRow";
 import styles from "./expenseTable.module.css";
 
-export const mountExpenseTable = (expenses: Expense[]): HTMLTableElement => {
+export const mountExpenseTable = (
+  expenses: Expense[],
+  setIsEditing: (expenseId: string) => Promise<void>
+): HTMLTableElement => {
   const table = document.createElement("table");
   table.classList.add(styles["expense-table"]);
 
@@ -17,17 +20,20 @@ export const mountExpenseTable = (expenses: Expense[]): HTMLTableElement => {
       </tr> 
     </thead>
   `;
-  table.appendChild(mountTableBody(expenses));
+  table.appendChild(mountTableBody(expenses, setIsEditing));
 
   return table;
 };
 
-const mountTableBody = (expenses: Expense[]): HTMLTableSectionElement => {
+const mountTableBody = (
+  expenses: Expense[],
+  setIsEditing: (expenseId: string) => Promise<void>
+): HTMLTableSectionElement => {
   const tableBody = document.createElement("tbody");
   tableBody.classList.add("expense-table-body");
 
   const expenseRows = expenses.map((expense, idx) =>
-    createExpenseRow(expense, idx % 2 !== 0)
+    createExpenseRow(expense, idx % 2 !== 0, setIsEditing)
   );
 
   tableBody.append(...expenseRows);
