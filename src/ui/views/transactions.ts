@@ -23,6 +23,7 @@ export default async function initDashboard(
     const formContainer = document.createElement("div");
     formContainer.id = formId;
     formContainer.classList.add(styles["expense-form-container"]);
+    formContainer.innerHTML = "<h2>Add Expense</h2>";
     formContainer.appendChild(
       mountAddExpenseForm({
         onSubmit: controller.addTransaction,

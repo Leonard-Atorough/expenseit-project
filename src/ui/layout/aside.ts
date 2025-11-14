@@ -4,7 +4,7 @@ export function Aside() {
       <nav class="main-nav" id="mainNavbar" aria-label="Main Menu">
         <ul class="main-nav-list">
           <li class="tab"> 
-            <a href="/"> Dashboard </a>
+            <a href="/dashboard"> Dashboard </a>
           </li> 
           <li class="tab"> 
             <a href="/transactions"> Transactions </a>
