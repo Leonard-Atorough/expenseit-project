@@ -30,7 +30,7 @@ export const mountAddExpenseForm = (
       date: fd.get("date") as string,
       category: fd.get("category") as string,
     };
-    if (mode) {
+    if (mode === "edit") {
       await onEdit({ ...payload, id: selectedExpense });
       resetForm(form);
     } else {

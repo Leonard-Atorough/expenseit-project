@@ -26,19 +26,35 @@ export async function createTransactionController(
     }));
   }
 
-  async function editTransaction(params: Expense) {
-    const state = (await store).getState();
+  async function editTransaction(expense: Expense) {
+    if (!expense) {
+      console.error("Cannot edit expense. No expense to edit supplied.");
+    }
 
-    const oldExpenses = state.expenses.filter(
-      (expense) => expense.id !== params.id
-    );
+    try {
+      const s = (await store) as AppStore;
+      let edited = false;
 
-    (await store).setState((prev) => ({
-      ...prev,
-      expenses: [...oldExpenses, params],
-      formMode: "create",
-      selectedExpenseId: null,
-    }));
+      s.setState((prev) => {
+        const exists = prev.expenses.some((e) => e.id === expense.id);
+        if (!exists) {
+          console.error(
+            `Could not edit expense ${expense.description}. It does not exist.`
+          );
+          return { ...prev, formMode: "create", selectedExpenseId: null };
+        }
+        edited = true;
+        const old = prev.expenses.filter((o) => o.id !== expense.id);
+        return {
+          ...prev,
+          expenses: [...old, expense],
+          formMode: "create",
+          selectedExpenseId: null,
+        };
+      });
+    } catch (err) {
+      console.error("Attempted expense edit failed:", err);
+    }
   }
 
   async function deleteTransaction(expenseId: string) {
@@ -66,7 +82,7 @@ export async function createTransactionController(
     addTransaction,
     editTransaction,
     setIsEditing,
-    deleteTransaction
+    deleteTransaction,
   };
 
   Object.assign(placeholder, controller);
@@ -79,5 +95,5 @@ export interface TransactionController {
   addTransaction(raw: Omit<Expense, "id">): Promise<void>;
   editTransaction(params: Expense): Promise<void>;
   setIsEditing(expenseId: string): Promise<void>;
-  deleteTransaction(expenseId: string): Promise<void>
+  deleteTransaction(expenseId: string): Promise<void>;
 }
