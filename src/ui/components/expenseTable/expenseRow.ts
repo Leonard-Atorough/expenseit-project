@@ -1,6 +1,4 @@
 import type { Expense } from "../../../models/expense";
-import { AppStore } from "../../../store/appStore";
-
 import styles from "./expenseRow.module.css";
 
 type expenseRowHandlerProps = {

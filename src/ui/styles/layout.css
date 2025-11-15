@@ -3,7 +3,7 @@
   top: 0;
   color: var(--primary-50);
   box-shadow: 0 0 1rem var(--text-100);
-  background-color: var(--primary-900);
+  background-color: var(--primary);
   margin: 0.5rem;
   border-radius: 0.5rem;
   > .title {
@@ -20,7 +20,7 @@
 .main-sidebar {
   max-width: 200px;
   width: 100%;
-  background-color: var(--primary-100);
+  background-color: #fff;
   resize: horizontal;
   overflow: auto;
   margin: 0.5rem;
