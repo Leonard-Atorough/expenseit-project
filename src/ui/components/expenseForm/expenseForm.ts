@@ -1,4 +1,4 @@
-import { createExpenseModel, type Expense } from "../../../models/expense";
+import { type Expense } from "../../../models/expense";
 import { AppStore } from "../../../store/appStore";
 
 import styles from "./expenseForm.module.css";
