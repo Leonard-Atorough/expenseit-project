@@ -10,13 +10,13 @@ export const mountExpenseTable = (
   const table = document.createElement("table");
   table.classList.add(styles["expense-table"]);
 
-  const headings = ["DESCRIPTION", "AMOUNT", "DATE", "CATEGORY", "ACTIONS"];
+  const headings = ["Description", "Amount", "Date", "Category", "Actions"];
 
   table.innerHTML = `
     <thead>
       <tr>
         ${headings
-          .map((h) => `<th class=${styles["expense-table-heading"]}>${h}</th>`)
+          .map((h) => `<th class=${styles["expense-table__header"]}>${h}</th>`)
           .join("")}
       </tr> 
     </thead>
@@ -32,10 +32,10 @@ const mountTableBody = (
   handleDelete: (expenseId: string) => Promise<void>
 ): HTMLTableSectionElement => {
   const tableBody = document.createElement("tbody");
-  tableBody.classList.add("expense-table-body");
+  tableBody.classList.add("expense-table__body");
 
   const expenseRows = expenses.map((expense, idx) =>
-    createExpenseRow(expense, idx % 2 !== 0, {setIsEditing, handleDelete})
+    createExpenseRow(expense, idx % 2 !== 0, { setIsEditing, handleDelete })
   );
 
   tableBody.append(...expenseRows);

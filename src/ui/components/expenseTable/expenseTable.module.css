@@ -1,16 +1,24 @@
 .expense-table {
+  border-collapse: separate;
+  border-spacing: 0;
   border: 2px solid var(--primary);
+  border-radius: 0.5rem;
+  overflow: hidden;
   width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
-.expense-table-heading {
-  padding: 1rem;
+.expense-table__header {
+  padding: 0.5rem;
   background-color: var(--primary);
   color: var(--background);
   font-size: var(--font-size-1);
+  vertical-align: middle;
 }
 
-.expense-table-body {
+.expense-table__body {
   max-height: 400px;
+  vertical-align: middle;
   overflow-y: auto;
 }
