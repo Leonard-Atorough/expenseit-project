@@ -2,6 +2,9 @@ import { InitAppLayout } from "./ui/layout/appLayout";
 import { CreateRouter } from "./router/Router";
 import { createTransactionController } from "./controllers/transactionController";
 import { AppStore } from "./store/appStore";
+import { CreateDashboardController } from "./controllers/dashboardController";
+
+import "./ui/styles/global.css";
 
 const router = CreateRouter();
 const contentRoot = InitAppLayout(router);
@@ -26,7 +29,8 @@ router.register("/transactions", async () => {
 });
 
 router.register("/dashboard", async () => {
-  contentRoot.innerHTML = "<h2>Dashboard page – coming soon</h2>";
+  const controller = await CreateDashboardController(await store, contentRoot);
+  controller.init();
 });
 
 router.register("/account", () => {

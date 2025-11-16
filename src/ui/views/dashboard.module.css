@@ -1,0 +1,23 @@
+.summary-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.summary-tabs__tab {
+  flex-grow: 1;
+  background-color: #fff;
+  padding: 1rem 3rem;
+  border-radius: 0.5rem;
+  box-shadow: 2px 2px 6px var(--primary-100);
+}
+
+.summary-tabs__title {
+  font-weight: 500;
+}
+
+.summary-tabs__content {
+  color: red;
+  font-size: 2rem;
+}

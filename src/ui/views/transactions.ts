@@ -1,5 +1,5 @@
 import type { TransactionController } from "../../controllers/transactionController";
-import { AppStore } from "../../store/appStore";
+import type { AppStore } from "../../store/appStore";
 import { mountAddExpenseForm } from "../components/expenseForm/expenseForm";
 import { mountExpenseTable } from "../components/expenseTable/expenseTable";
 
@@ -7,13 +7,13 @@ import styles from "./transactions.module.css";
 
 const formId = "addExpenseForm";
 
-export default async function initDashboard(
+export default async function initTransactions(
   root: HTMLDivElement,
-  state: AppStore,
+  store: AppStore,
   controller: TransactionController
-) {
+): Promise<{ render: () => Promise<void> }> {
   async function render() {
-    const { expenses, formMode, selectedExpenseId } = state.getState();
+    const { expenses, formMode, selectedExpenseId } = store.getState();
 
     root.innerHTML = "";
 
