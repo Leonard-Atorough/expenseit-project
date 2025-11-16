@@ -1,8 +1,22 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-weight: 500;
+}
+
+.dashboard-section {
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 2px 2px 6px var(--primary-100);
+}
+
 .summary-tabs {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .summary-tabs__tab {
@@ -14,7 +28,6 @@
 }
 
 .summary-tabs__title {
-  font-weight: 500;
 }
 
 .summary-tabs__content {

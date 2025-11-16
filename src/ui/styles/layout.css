@@ -28,6 +28,29 @@
   border-radius: 0.5rem;
 }
 
+.profile {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 0.5rem;
+  gap: 0.5rem;
+}
+
+.profile__picture {
+  width: 150px;
+  height: 150px;
+  background-color: var(--primary);
+  border-radius: 5rem;
+}
+
+.profile__badge {
+  padding: 0.5rem;
+  font-weight: 500;
+  border-radius: 0.25rem;
+}
+
 .main-nav {
   padding: 0.5rem;
 }

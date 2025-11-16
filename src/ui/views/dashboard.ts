@@ -14,6 +14,9 @@ export default async function InitDashboard(
 
     root.innerHTML = "";
 
+    const dashboard = document.createElement("div");
+    dashboard.classList.add(styles["dashboard"]);
+
     const summaryTabs = document.createElement("div");
     summaryTabs.classList.add(styles["summary-tabs"]);
 
@@ -29,15 +32,21 @@ export default async function InitDashboard(
       expenses.length.toString(),
       "Transactions"
     );
-
     summaryTabs.append(expenseAmount, transactionCount);
 
-    root.appendChild(summaryTabs);
+    const sectA = createDashboardSection(expenses);
+
+    dashboard.append(summaryTabs, sectA);
+    root.appendChild(dashboard);
   }
 
   return { render };
 }
-function createSummaryTab(value: string, title: string, sign?: string) {
+function createSummaryTab(
+  value: string,
+  title: string,
+  sign?: string
+): HTMLDivElement {
   const summaryTab = document.createElement("div");
   summaryTab.classList.add(styles["summary-tabs__tab"]);
 
@@ -51,4 +60,21 @@ function createSummaryTab(value: string, title: string, sign?: string) {
 
   summaryTab.append(content, title);
   return summaryTab;
+}
+
+function createDashboardSection(expenses: Expense[]): HTMLElement {
+  const section = document.createElement("section");
+  section.classList.add(styles["dashboard-section"]);
+
+  const categoriesList = document.createElement("ul");
+
+  const categories = Map.groupBy(expenses, ({ category }) => category!);
+  Array.from(categories.keys()).forEach((category) => {
+    const li = document.createElement("li");
+    li.textContent = category;
+    categoriesList.appendChild(li);
+  });
+
+  section.appendChild(categoriesList);
+  return section;
 }
